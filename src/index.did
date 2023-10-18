@@ -1,0 +1,29 @@
+type Pet = record {
+  id : text;
+  age : float64;
+  weight : float64;
+  vaccination : bool;
+  owner : principal;
+  name : text;
+  createdAt : nat64;
+  healthRecord : text;
+  updatedAt : opt nat64;
+  breed : text;
+};
+type PetPayload = record {
+  age : float64;
+  weight : float64;
+  vaccination : bool;
+  name : text;
+  healthRecord : text;
+  breed : text;
+};
+type _AzleResult = variant { Ok : Pet; Err : text };
+type _AzleResult_1 = variant { Ok : vec Pet; Err : text };
+service : () -> {
+  createPet : (PetPayload) -> (_AzleResult);
+  deletePet : (text) -> (_AzleResult);
+  getAllPets : () -> (_AzleResult_1) query;
+  getPet : (text) -> (_AzleResult) query;
+  updatePet : (text, PetPayload) -> (_AzleResult);
+}
