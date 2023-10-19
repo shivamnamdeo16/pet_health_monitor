@@ -20,10 +20,18 @@ type PetPayload = record {
 };
 type _AzleResult = variant { Ok : Pet; Err : text };
 type _AzleResult_1 = variant { Ok : vec Pet; Err : text };
+type _AzleResult_2 = variant { Ok : float64; Err : text };
 service : () -> {
+  addHealthRecord : (text, text) -> (_AzleResult);
   createPet : (PetPayload) -> (_AzleResult);
-  deletePet : (text) -> (_AzleResult);
+  deletePetsByOwner : (principal) -> (_AzleResult_1);
   getAllPets : () -> (_AzleResult_1) query;
+  getAverageAgeOfPets : () -> (_AzleResult_2) query;
+  getNumberOfPets : () -> (_AzleResult_2) query;
   getPet : (text) -> (_AzleResult) query;
-  updatePet : (text, PetPayload) -> (_AzleResult);
+  getPetsByBreed : (text) -> (_AzleResult_1) query;
+  getPetsByOwner : (principal) -> (_AzleResult_1) query;
+  searchPetsByName : (text) -> (_AzleResult_1) query;
+  updatePetWeight : (text, float64) -> (_AzleResult);
+  updateVaccinationStatus : (text, bool) -> (_AzleResult);
 }
