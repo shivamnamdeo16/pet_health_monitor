@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
     weight: number;
     healthRecord: string;
     vaccination: boolean;
-    owner: Principal;
+    owner: string;
     createdAt: nat64;
     updatedAt: Opt<nat64>;
   }>;
@@ -24,6 +24,7 @@ import { v4 as uuidv4 } from "uuid";
     weight: number;
     healthRecord: string;
     vaccination: boolean;
+    owner: string
   }>;
 
 
@@ -39,7 +40,7 @@ import { v4 as uuidv4 } from "uuid";
       createdAt: ic.time(),
       updatedAt: Opt.None,
       ...payload,
-      owner: ic.caller(),
+      
     };
   
     
@@ -106,6 +107,33 @@ import { v4 as uuidv4 } from "uuid";
     });
   }
 
+  $query;
+export function getVaccinatedPets(): Result<Vec<Pet>, string> {
+  const vaccinatedPets = petStorage.values().filter((pet) => pet.vaccination);
+  return Result.Ok(vaccinatedPets);
+}
+
+$query;
+export function searchPetsByOwner(ownerName: string): Result<Vec<Pet>, string> {
+  const ownerPets = petStorage.values().filter((pet) => pet.owner === ownerName);
+  return Result.Ok(ownerPets);
+}
+
+$update;
+export function updateHealthRecord(id: string, newHealthRecord: string): Result<Pet, string> {
+  return match(petStorage.get(id), {
+    Some: (existingPet) => {
+      existingPet.healthRecord = newHealthRecord;
+      existingPet.updatedAt = Opt.Some(ic.time());
+      petStorage.insert(id, existingPet);
+      return Result.Ok<Pet, string>(existingPet);
+    },
+    None: () => Result.Err<Pet, string>(`Pet with id=${id} not found.`),
+  });
+}
+
+
+
   globalThis.crypto = {
     //@ts-ignore
     getRandomValues: () => {
@@ -119,5 +147,3 @@ import { v4 as uuidv4 } from "uuid";
     },
   };
   
-
-  // Pet Health Monitor is a comprehensive web application designed to assist pet owners in caring for their furry companions' well-being. Our platform offers a user-friendly experience, allowing users to seamlessly perform CRUD (Create, Read, Update, Delete) operations on pet profiles, health records. Furthermore, Pet Health Monitor goes the extra mile by providing timely reminders for vaccinations and vet appointments, ensuring that your pets receive the best care possible.
