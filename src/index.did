@@ -3,7 +3,7 @@ type Pet = record {
   age : float64;
   weight : float64;
   vaccination : bool;
-  owner : principal;
+  owner : text;
   name : text;
   createdAt : nat64;
   healthRecord : text;
@@ -14,6 +14,7 @@ type PetPayload = record {
   age : float64;
   weight : float64;
   vaccination : bool;
+  owner : text;
   name : text;
   healthRecord : text;
   breed : text;
@@ -25,5 +26,8 @@ service : () -> {
   deletePet : (text) -> (_AzleResult);
   getAllPets : () -> (_AzleResult_1) query;
   getPet : (text) -> (_AzleResult) query;
+  getVaccinatedPets : () -> (_AzleResult_1) query;
+  searchPetsByOwner : (text) -> (_AzleResult_1) query;
+  updateHealthRecord : (text, text) -> (_AzleResult);
   updatePet : (text, PetPayload) -> (_AzleResult);
 }
